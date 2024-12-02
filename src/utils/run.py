@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import sys
 from PyQt6.QtWidgets import QApplication
 sys.path.append("/home/tul16619/SD1/MLADP_GUI/src/functs/")

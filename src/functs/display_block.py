@@ -2,9 +2,14 @@ from PyQt6.QtWidgets import QListWidget, QLabel, QVBoxLayout, QHBoxLayout, QPush
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtCore import Qt
 import os
-imagepath = "../functs/images/"
-imagepath_CNN = "../functs/CNN_images/"
-imagepath_RNF = "../functs/RNF_images/"
+imagepath = "/data/isip/exp/tuh_dpath/exp_0289/Machine-Learning-Applications-In-Digital-Pathology/nedc_mladp/data/yuan_test/original_files/"
+imagepath_OG = "/data/isip/exp/tuh_dpath/exp_0289/Machine-Learning-Applications-In-Digital-Pathology/nedc_mladp/data/yuan_test/original_ann_files/"
+imagepath_CNN = "/data/isip/exp/tuh_dpath/exp_0289/Machine-Learning-Applications-In-Digital-Pathology/nedc_mladp/data/yuan_test/cnn_files/"
+imagepath_RNF = "/data/isip/exp/tuh_dpath/exp_0289/Machine-Learning-Applications-In-Digital-Pathology/nedc_mladp/data/yuan_test/rnf_files/"
+
+cnn_list_file = "/data/isip/exp/tuh_dpath/exp_0289/Machine-Learning-Applications-In-Digital-Pathology/nedc_mladp/data/yuan_test/all_files/cnn_files.list"
+rnf_list_file = "/data/isip/exp/tuh_dpath/exp_0289/Machine-Learning-Applications-In-Digital-Pathology/nedc_mladp/data/yuan_test/all_files/rnf_files.list"
+xml_list_file = "/data/isip/exp/tuh_dpath/exp_0289/Machine-Learning-Applications-In-Digital-Pathology/nedc_mladp/data/yuan_test/all_files/xml_files.list"
 
 class DisplayBlockManager:
     def __init__(self):
@@ -14,6 +19,17 @@ class DisplayBlockManager:
         '''
         self.selected_item = None
         self.pixmap = None
+        self.image_title = "No image."
+        self.image_name = None
+
+        with open(cnn_list_file, "r") as cnn_files:
+            self.cnn_list = [file.strip() for file in cnn_files]
+
+        with open(rnf_list_file, "r") as rnf_files:
+            self.rnf_list = [file.strip() for file in rnf_files]
+
+        with open(xml_list_file, "r") as xml_files:
+            self.xml_list = [file.strip() for file in xml_files]
 
     def display_block(self):
         '''
@@ -108,16 +124,22 @@ class DisplayBlockManager:
     def display_selected_item(self):
         if self.selected_item:
             self.image_name = self.selected_item.text()
+            self.image_window.setTitle(self.image_name)
             self.pixmap = QPixmap(imagepath+self.image_name)
+            print("directory: ", imagepath)
+            print("filename: ", self.image_name)
             if not self.pixmap.isNull():
                 self.image_label.setPixmap(self.pixmap.scaled(
                     self.image_label.width(),
                     self.image_label.height(),
                     Qt.AspectRatioMode.KeepAspectRatio
                 ))
+                more_image_name = self.more_dummy_list(0)
+                self.more_title.setText(self.image_title)
+                self.pixmap = QPixmap(more_image_name)
                 self.more_label.setPixmap(self.pixmap.scaled(
-                    self.image_label.width(),
-                    self.image_label.height(),
+                    self.more_label.width(),
+                    self.more_label.height(),
                     Qt.AspectRatioMode.KeepAspectRatio
                 ))
             else:
@@ -130,10 +152,16 @@ class DisplayBlockManager:
         more_window_layout =  QVBoxLayout()
         
 
-        self.more_window = QGroupBox("More")
+        self.more_window = QGroupBox()
         self.more_window.setStyleSheet("background-color: lightblue;")
         self.more_window.setFixedSize(600,500)
         self.more_window.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.more_title = QLabel()
+        self.more_title.setText("Original Biopsy Slide")
+        self.more_title.setFixedHeight(20)
+        self.more_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.more_title.setStyleSheet("font-size: 16px;") # font-weight: bold;
 
         # Display image
         self.more_label = QLabel()
@@ -148,8 +176,10 @@ class DisplayBlockManager:
         more_buttons.addWidget(left_button)
         more_buttons.addWidget(right_button)
 
+        more_window_layout.addWidget(self.more_title,0)
         more_window_layout.addWidget(self.more_label)
         more_window_layout.addLayout(more_buttons)
+        # more_window_layout.addStretch(1)
         self.more_window.setLayout(more_window_layout)
 
         more_layout.addWidget(self.more_window)
@@ -159,16 +189,19 @@ class DisplayBlockManager:
     def display_more_items(self, idx):
         if self.selected_item:
             # self.image_name = self.selected_item.text()
+
             more_image_name = self.more_dummy_list(idx)
             self.pixmap = QPixmap(more_image_name)
             print(self.pixmap.isNull())
             if not self.pixmap.isNull():
+                self.more_title.setText(self.image_title)
                 self.more_label.setPixmap(self.pixmap.scaled(
                     self.more_label.width(),
                     self.more_label.height(),
                     Qt.AspectRatioMode.KeepAspectRatio
                 ))
             else:
+                self.more_title.setText("No Image")
                 self.more_label.setText("Image not found.")
         else:
             self.more_label.setText("No item selected. Please select an item first.")
@@ -189,10 +222,35 @@ class DisplayBlockManager:
         return list_widget
     
     def more_dummy_list(self, idx):
-        image_og = imagepath + self.image_name
+        image = imagepath + self.image_name
+        image_OG = imagepath_OG + self.image_name
         image_RNF = imagepath_RNF + self.image_name
         image_CNN = imagepath_CNN + self.image_name
-        more_image_list = [image_og, image_RNF, image_CNN]
+        more_image_list = [image, image_OG, image_RNF, image_CNN]
+        more_image_title = ["Original Biopsy Slide", "Original Annotations", "RNF Predictions", "CNN Predictions"]
+        self.image_title = more_image_title[idx]
         print(idx, ": ", more_image_list[idx], "| original image: ", self.image_name)
-        
+
         return more_image_list[idx]
+    
+    def get_filenames(self):
+        file, extension = os.path.splitext(self.image_name)
+
+        for line in self.xml_list:
+            if file in line:
+                self.original_xml_file = line
+    
+        for line in self.cnn_list:
+            if file in line:
+                self.cnn_pred_file = line
+
+        for line in self.rnf_list:
+            if file in line:
+                self.rnf_pred_file = line
+
+        print("files: ")
+        print("  > ", self.original_xml_file)
+        print("  > ", self.cnn_pred_file)
+        print("  > ", self.rnf_pred_file)
+
+        return self.original_xml_file, self.cnn_pred_file, self.rnf_pred_file
