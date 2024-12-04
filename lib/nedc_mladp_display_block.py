@@ -36,9 +36,7 @@ class DisplayBlockManager:
 
         # Create the scene
         self.image_zoom_manager = ImageZoomManager()
-        self.image_zoom_manager.setFixedSize(500, 350)
-
-        
+        self.image_zoom_manager.setFixedSize(550, 400)
 
     def display_block(self):
         '''
@@ -153,12 +151,6 @@ class DisplayBlockManager:
                 image_path = self.more_dummy_list(0)
                 self.more_title.setText(self.image_title)
                 self.image_zoom_manager.update_image(image_path)
-                # self.pixmap = QPixmap(image_path)
-                # self.more_label.setPixmap(self.pixmap.scaled(
-                #     self.more_label.width(),
-                #     self.more_label.height(),
-                #     Qt.AspectRatioMode.KeepAspectRatio
-                # ))
 
             else:
                 # self.image_label.setText("Image not found.")
@@ -197,7 +189,7 @@ class DisplayBlockManager:
 
         self.focus_graphic = QVBoxLayout()
         self.focus_graphic.addWidget(self.image_zoom_manager)
-        # self.focus_graphic.addWidget(self.more_label)
+        self.focus_graphic.setAlignment(Qt.AlignmentFlag.AlignCenter)
         
         # Add the previous and next buttons
         more_buttons = QHBoxLayout()
@@ -209,7 +201,6 @@ class DisplayBlockManager:
         more_buttons.addWidget(right_button)
 
         more_window_layout.addWidget(self.more_title,0)
-        # more_window_layout.addWidget(self.more_label)
         more_window_layout.addLayout(self.focus_graphic)
         more_window_layout.addLayout(more_buttons)
         self.more_window.setLayout(more_window_layout)
@@ -234,11 +225,6 @@ class DisplayBlockManager:
                 #
                 self.more_title.setText(self.image_title)
                 self.image_zoom_manager.update_image(image_path)
-                # self.more_label.setPixmap(self.pixmap.scaled(
-                #     self.more_label.width(),
-                #     self.more_label.height(),
-                #     Qt.AspectRatioMode.KeepAspectRatio
-                # ))
 
             else:
                 self.more_title.setText("No Image")

@@ -30,7 +30,7 @@ class ImageZoomManager(QGraphicsView):
         pixmap = QPixmap(image_path)
         self.scene.clear()
         self.image_item = self.scene.addPixmap(pixmap.scaled(
-            600,
+            550,
             500,
             Qt.AspectRatioMode.KeepAspectRatio
         ))
@@ -85,8 +85,8 @@ class ImageZoomManager(QGraphicsView):
             self.ensure_bounds()  # Ensure bounds after zoom
 
     def zoom_out(self):
-        if self.current_zoom > 0.1:
-            self.scale(self.zoom_factor, self.zoom_factor)
+        if self.current_zoom > 1.0:
+            self.scale(1/self.zoom_factor, 1/self.zoom_factor)
             self.current_zoom /= self.zoom_factor
             self.ensure_bounds()  # Ensure bounds after zoom
 
