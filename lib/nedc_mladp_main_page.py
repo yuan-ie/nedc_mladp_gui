@@ -2,9 +2,9 @@ import sys
 from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QGroupBox, QStackedWidget, QScrollArea
 from PyQt6.QtCore import Qt
 
-import layouts
-from display_block import DisplayBlockManager
-from stats_block import StatsBlockManager
+import nedc_mladp_header_block as hd
+from nedc_mladp_display_block import DisplayBlockManager
+from nedc_mladp_stats_block import StatsBlockManager
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -17,7 +17,8 @@ class MainWindow(QMainWindow):
         self.stats_block_manager = StatsBlockManager()
 
         # Set window properties
-        self.setWindowTitle("Machine Learning Applications in Digital Pathology GUI")
+        # self.setWindowTitle("Machine Learning Applications in Digital Pathology GUI")
+        self.setWindowTitle("Yuan Test GUI")
         self.setGeometry(100, 100, 800, 600)
         self.setStyleSheet("background-color: #f0d1e1;")
 
@@ -37,11 +38,11 @@ class MainWindow(QMainWindow):
         
 
         # block one -- title block
-        block_one = layouts.title_block()
+        block_one = hd.title_block()
         content_layout.addWidget(block_one, 0)  # Stretch factor = 0, no extra space is given
 
         # block two -- menu bar
-        block_two, about_button, data_button, types_button = layouts.menu_block()
+        block_two, about_button, data_button, types_button = hd.menu_block()
         content_layout.addLayout(block_two)
 
 
@@ -77,7 +78,7 @@ class MainWindow(QMainWindow):
         
     def create_about_widget(self):
         about_widget = QWidget()
-        about_layout = QVBoxLayout()
+        about_layout = QVBoxLayout()    
         about_label = QLabel("""
     About the project:
     To minimize the time of cancer diagnosis, our team have created and used different Machine Learning models that
@@ -137,7 +138,7 @@ class MainWindow(QMainWindow):
         
         types_widget = QWidget()
         types_layout = QVBoxLayout()
-        type_block = layouts.type_block()
+        type_block = hd.type_block()
 
         types_layout.addLayout(type_block, 0)
         types_layout.addStretch(1)

@@ -1,7 +1,10 @@
-from PyQt6.QtWidgets import QListWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QGroupBox
+from PyQt6.QtWidgets import QListWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QGroupBox, QGraphicsView, QGraphicsScene, QGraphicsPixmapItem
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtCore import Qt
 import os
+
+from nedc_mladp_zoom_funct import ImageZoomManager
+
 imagepath = "/data/isip/exp/tuh_dpath/exp_0289/Machine-Learning-Applications-In-Digital-Pathology/nedc_mladp/data/yuan_test/original_files/"
 imagepath_OG = "/data/isip/exp/tuh_dpath/exp_0289/Machine-Learning-Applications-In-Digital-Pathology/nedc_mladp/data/yuan_test/original_ann_files/"
 imagepath_CNN = "/data/isip/exp/tuh_dpath/exp_0289/Machine-Learning-Applications-In-Digital-Pathology/nedc_mladp/data/yuan_test/cnn_files/"
@@ -30,6 +33,12 @@ class DisplayBlockManager:
 
         with open(xml_list_file, "r") as xml_files:
             self.xml_list = [file.strip() for file in xml_files]
+
+        # Create the scene
+        self.image_zoom_manager = ImageZoomManager()
+        self.image_zoom_manager.setFixedSize(500, 350)
+
+        
 
     def display_block(self):
         '''
@@ -98,7 +107,6 @@ class DisplayBlockManager:
 
         # Initialize the list block layout.
         self.list_layout = QVBoxLayout()
-
         list_widget = self.dummy_list()
 
         # Add the buttons.
@@ -106,7 +114,6 @@ class DisplayBlockManager:
         button_select = QPushButton("Select")
         button_more = QPushButton("More")
         button_save = QPushButton("Save")
-        button_select.clicked.connect(self.display_selected_item)
         buttons.addWidget(button_select)
         buttons.addWidget(button_more)
         buttons.addWidget(button_save)
@@ -128,26 +135,47 @@ class DisplayBlockManager:
             self.pixmap = QPixmap(imagepath+self.image_name)
             print("directory: ", imagepath)
             print("filename: ", self.image_name)
+
+            # If the image exists:
+            #
             if not self.pixmap.isNull():
+
+                # Displays selected image on the 'Viewer' page of the main window.
+                #
                 self.image_label.setPixmap(self.pixmap.scaled(
                     self.image_label.width(),
                     self.image_label.height(),
                     Qt.AspectRatioMode.KeepAspectRatio
                 ))
-                more_image_name = self.more_dummy_list(0)
+
+                # Displays selected image by default on 'more' window popup.
+                #
+                image_path = self.more_dummy_list(0)
                 self.more_title.setText(self.image_title)
-                self.pixmap = QPixmap(more_image_name)
-                self.more_label.setPixmap(self.pixmap.scaled(
-                    self.more_label.width(),
-                    self.more_label.height(),
-                    Qt.AspectRatioMode.KeepAspectRatio
-                ))
+                self.image_zoom_manager.update_image(image_path)
+                # self.pixmap = QPixmap(image_path)
+                # self.more_label.setPixmap(self.pixmap.scaled(
+                #     self.more_label.width(),
+                #     self.more_label.height(),
+                #     Qt.AspectRatioMode.KeepAspectRatio
+                # ))
+
             else:
-                self.image_label.setText("Image not found.")
+                # self.image_label.setText("Image not found.")
+                # self.more_label.setText("Image not found.")
+                self.image_label.setText("New.")
+                self.more_label.setText("New.")
         else:
             self.image_label.setText("No item selected. Please select an item first.")
 
     def display_more(self):
+        '''
+        Method:
+            This method activates for each 'more' button click.
+            Creates a new window with the layout of title, image, and buttons.
+            Starts off with the original image that is selected.
+        '''
+
         more_layout = QVBoxLayout()
         more_window_layout =  QVBoxLayout()
         
@@ -166,6 +194,10 @@ class DisplayBlockManager:
         # Display image
         self.more_label = QLabel()
         self.more_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.focus_graphic = QVBoxLayout()
+        self.focus_graphic.addWidget(self.image_zoom_manager)
+        # self.focus_graphic.addWidget(self.more_label)
         
         # Add the previous and next buttons
         more_buttons = QHBoxLayout()
@@ -177,9 +209,9 @@ class DisplayBlockManager:
         more_buttons.addWidget(right_button)
 
         more_window_layout.addWidget(self.more_title,0)
-        more_window_layout.addWidget(self.more_label)
+        # more_window_layout.addWidget(self.more_label)
+        more_window_layout.addLayout(self.focus_graphic)
         more_window_layout.addLayout(more_buttons)
-        # more_window_layout.addStretch(1)
         self.more_window.setLayout(more_window_layout)
 
         more_layout.addWidget(self.more_window)
@@ -187,19 +219,27 @@ class DisplayBlockManager:
         return more_layout, left_button, right_button
     
     def display_more_items(self, idx):
-        if self.selected_item:
-            # self.image_name = self.selected_item.text()
+        '''
+        Method:
+            Activates when 'prev' or 'next' is clicked.
+        '''
 
-            more_image_name = self.more_dummy_list(idx)
-            self.pixmap = QPixmap(more_image_name)
-            print(self.pixmap.isNull())
+        if self.selected_item:
+
+            image_path = self.more_dummy_list(idx)
+            self.pixmap = QPixmap(image_path)
             if not self.pixmap.isNull():
+
+                # Displays the toggled image on the 'more' window.
+                #
                 self.more_title.setText(self.image_title)
-                self.more_label.setPixmap(self.pixmap.scaled(
-                    self.more_label.width(),
-                    self.more_label.height(),
-                    Qt.AspectRatioMode.KeepAspectRatio
-                ))
+                self.image_zoom_manager.update_image(image_path)
+                # self.more_label.setPixmap(self.pixmap.scaled(
+                #     self.more_label.width(),
+                #     self.more_label.height(),
+                #     Qt.AspectRatioMode.KeepAspectRatio
+                # ))
+
             else:
                 self.more_title.setText("No Image")
                 self.more_label.setText("Image not found.")
@@ -254,3 +294,5 @@ class DisplayBlockManager:
         print("  > ", self.rnf_pred_file)
 
         return self.original_xml_file, self.cnn_pred_file, self.rnf_pred_file
+    
+    

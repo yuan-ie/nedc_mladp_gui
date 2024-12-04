@@ -13,6 +13,7 @@ class StatsBlockManager:
         '''
         Method:
             Create the statistics block.
+            Contains TP, TN, FP, FN. Can contain more information.
         '''
 
         stats = QVBoxLayout()

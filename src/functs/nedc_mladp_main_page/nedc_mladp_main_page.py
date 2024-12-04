@@ -17,7 +17,8 @@ class MainWindow(QMainWindow):
         self.stats_block_manager = StatsBlockManager()
 
         # Set window properties
-        self.setWindowTitle("Machine Learning Applications in Digital Pathology GUI")
+        # self.setWindowTitle("Machine Learning Applications in Digital Pathology GUI")
+        self.setWindowTitle("Yuan Test GUI")
         self.setGeometry(100, 100, 800, 600)
         self.setStyleSheet("background-color: #f0d1e1;")
 
@@ -77,7 +78,7 @@ class MainWindow(QMainWindow):
         
     def create_about_widget(self):
         about_widget = QWidget()
-        about_layout = QVBoxLayout()
+        about_layout = QVBoxLayout()    
         about_label = QLabel("""
     About the project:
     To minimize the time of cancer diagnosis, our team have created and used different Machine Learning models that
@@ -137,7 +138,7 @@ class MainWindow(QMainWindow):
         
         types_widget = QWidget()
         types_layout = QVBoxLayout()
-        type_block = layouts.type_block()
+        type_block = hd.type_block()
 
         types_layout.addLayout(type_block, 0)
         types_layout.addStretch(1)
