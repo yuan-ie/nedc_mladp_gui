@@ -76,12 +76,12 @@ class StatsBlockManager:
             csv_file: predictions file
         '''
 
-        tp,fp,tn,fn = get_stats(ref_fname=xml_file, hyp_fname=cnn_file)
-        self.cnn_stats.setText(self.print_numbers(tp,fp,tn,fn))
+        tp,fp,tn,fn, conf_scores, overall_conf = get_stats(ref_fname=xml_file, hyp_fname=cnn_file)
+        self.cnn_stats.setText(self.print_numbers(tp,fp,tn,fn, conf_scores, overall_conf))
 
-        tp,fp,tn,fn = get_stats(ref_fname=xml_file, hyp_fname=rnf_file)
-        self.rnf_stats.setText(self.print_numbers(tp,fp,tn,fn))
+        tp,fp,tn,fn, conf_scores, overall_conf= get_stats(ref_fname=xml_file, hyp_fname=rnf_file)
+        self.rnf_stats.setText(self.print_numbers(tp,fp,tn,fn, conf_scores, overall_conf))
 
-    def print_numbers(self, tp,fp,tn,fn):
+    def print_numbers(self, tp,fp,tn,fn, conf_scores, overall_conf):
         text = "True Positives: " + str(tp) + "\nFalse Positives: " + str(fp) + "\nTrue Negatives: " + str(tn) + "\nFalse Negatives: " + str(fn)
         return text
