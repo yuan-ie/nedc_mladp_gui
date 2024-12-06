@@ -158,6 +158,7 @@ class DisplayBlockManager:
                 # self.image_label.setText("New.")
                 # self.more_label.setText("New.")
                 pass
+
         elif self.selected_item is None:
             self.image_label.setText("No item selected. Please select an item first.")
 
