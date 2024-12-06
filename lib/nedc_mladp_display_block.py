@@ -74,7 +74,7 @@ class DisplayBlockManager:
         # Initialize the image block layout.
         self.image_window = QGroupBox("Image Window")
         self.image_window.setStyleSheet("background-color: lightblue;")
-        self.image_window.setFixedSize(900, 450)
+        self.image_window.setFixedSize(900, 430)
         self.image_window_layout = QVBoxLayout()
 
         # Default text for no image.
@@ -158,7 +158,7 @@ class DisplayBlockManager:
                 # self.image_label.setText("New.")
                 # self.more_label.setText("New.")
                 pass
-        else:
+        elif self.selected_item is None:
             self.image_label.setText("No item selected. Please select an item first.")
 
     def display_more(self):
@@ -257,8 +257,8 @@ class DisplayBlockManager:
             list_widget.addItem(image)
 
         # Add fixed number of items
-        for i in range(20):  # Adjust the number as needed
-            list_widget.addItem(f"Image {i + 1}")
+        # for i in range(20):  # Adjust the number as needed
+        #     list_widget.addItem(f"Image {i + 1}")
 
         return list_widget
     
@@ -318,7 +318,7 @@ class DisplayBlockManager:
         ]
 
         labels = ["bckg", "norm", "artf", "null", "susp", "infl", "nneo", "indc", "dcis"]
-        types = ["ref", "hyp"]
+        types = ["hyp", "ref"]
         rows, cols = 3, 10
 
         grid = QGridLayout()

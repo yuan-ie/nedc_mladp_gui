@@ -78,22 +78,9 @@ class MainWindow(QMainWindow):
         
     def create_about_widget(self):
         about_widget = QWidget()
-        about_layout = QVBoxLayout()    
-        about_label = QLabel("""
-    About the project:
-    To minimize the time of cancer diagnosis, our team have created and used different Machine Learning models that
-    could make predictions on breast tissue Biopsy slides.
 
-    About this interface:
-    This interface will allow users to select and view the original biopsy slides provided, as well as the annotations
-    and predictions generated.
-    In the All Data page:
-        1. Select an image and click the "Select" button. This will display a JPEG image on the main window.
-        2. Click the "More" button to view the annotations and predictions of different models in a separate window.
-        3. Some important numbers are in the results window on the bottom of the main window.
-                             """)
-        about_layout.addWidget(about_label, 0)
-        about_layout.addStretch(1)
+        about_layout = hd.about_block()
+        
         about_widget.setLayout(about_layout)
 
         return about_widget
@@ -158,8 +145,10 @@ class MainWindow(QMainWindow):
     def display_selected_item(self):
         self.more_widget.hide()
         self.display_block_manager.display_selected_item()
-        original_file, cnn_file, rnf_file = self.display_block_manager.get_filenames()
-        self.stats_block_manager.display_stats(original_file, cnn_file, rnf_file)
+        if self.display_block_manager.selected_item is not None:
+            original_file, cnn_file, rnf_file = self.display_block_manager.get_filenames()
+            self.stats_block_manager.display_stats(original_file, cnn_file, rnf_file)
+
 
     def display_prev_item(self):
         self.image_idx = (self.image_idx-1) % 4

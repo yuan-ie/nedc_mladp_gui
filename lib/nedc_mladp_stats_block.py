@@ -37,7 +37,7 @@ class StatsBlockManager:
 
         rnf_mini_layout = QHBoxLayout()
         self.rnf_stats = QLabel()
-        self.rnf_stats.setFixedWidth(250)
+        self.rnf_stats.setFixedWidth(200)
         
         rnf_mini_layout.addWidget(self.rnf_stats)
         self.rnf_histogram = HistogramWidget("RNF Accuracy Histogram")
@@ -55,7 +55,7 @@ class StatsBlockManager:
 
         cnn_mini_layout = QHBoxLayout()
         self.cnn_stats = QLabel()
-        self.cnn_stats.setFixedWidth(250)
+        self.cnn_stats.setFixedWidth(200)
         
         cnn_mini_layout.addWidget(self.cnn_stats)
         self.cnn_histogram = HistogramWidget("CNN Accuracy Histogram")
@@ -97,7 +97,6 @@ class StatsBlockManager:
     def print_numbers(self, confidence_scores, overall_confidence):
         string = ''
         for label in confidence_scores:
-            print(label)
             string += f'{label.upper()}: {confidence_scores[label]:.2f}\n'
 
         string += f'Overall Confidence: {overall_confidence:.4f}'
