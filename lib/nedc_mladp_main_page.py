@@ -19,7 +19,7 @@ class MainWindow(QMainWindow):
         # Set window properties
         # self.setWindowTitle("Machine Learning Applications in Digital Pathology GUI")
         self.setWindowTitle("Yuan Test GUI")
-        self.setGeometry(100, 100, 1600, 900)
+        self.setGeometry(20, 20, 1600, 900)
         self.setStyleSheet("background-color: #f0d1e1;")
 
         scroll_area = QScrollArea()

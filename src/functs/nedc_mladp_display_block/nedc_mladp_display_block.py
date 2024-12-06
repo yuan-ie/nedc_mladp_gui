@@ -7,8 +7,7 @@ from nedc_mladp_zoom_funct import ImageZoomManager
 
 imagepath = "/data/isip/exp/tuh_dpath/exp_0289/Machine-Learning-Applications-In-Digital-Pathology/nedc_mladp/data/yuan_test/original_files/"
 imagepath_OG = "/data/isip/exp/tuh_dpath/exp_0289/Machine-Learning-Applications-In-Digital-Pathology/nedc_mladp/data/yuan_test/original_ann_files/"
-# imagepath_CNN = "/data/isip/exp/tuh_dpath/exp_0289/Machine-Learning-Applications-In-Digital-Pathology/nedc_mladp/data/yuan_test/cnn_files/"
-imagepath_CNN = "/data/isip/exp/tuh_dpath/exp_0289/Machine-Learning-Applications-In-Digital-Pathology/nedc_mladp/data/yuan_test/cnn_image_outputs/"
+imagepath_CNN = "/data/isip/exp/tuh_dpath/exp_0289/Machine-Learning-Applications-In-Digital-Pathology/nedc_mladp/data/yuan_test/cnn_files/"
 imagepath_RNF = "/data/isip/exp/tuh_dpath/exp_0289/Machine-Learning-Applications-In-Digital-Pathology/nedc_mladp/data/yuan_test/rnf_files/"
 
 cnn_list_file = "/data/isip/exp/tuh_dpath/exp_0289/Machine-Learning-Applications-In-Digital-Pathology/nedc_mladp/data/yuan_test/all_files/cnn_files.list"
@@ -171,12 +170,13 @@ class DisplayBlockManager:
         '''
 
         more_layout = QVBoxLayout()
-        more_window_layout =  QVBoxLayout()
         
+        more_window_layout =  QVBoxLayout()
 
         self.more_window = QGroupBox()
         self.more_window.setStyleSheet("background-color: lightblue;")
-        self.more_window.setFixedSize(900,800)
+        # self.more_window.setFixedSize(900,800)
+        self.more_window.setGeometry(20, 20, 900, 800)
         self.more_window.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.more_title = QLabel()
@@ -199,18 +199,23 @@ class DisplayBlockManager:
         # Add the previous and next buttons
         more_buttons = QHBoxLayout()
         left_button = QPushButton("Previous")
-        left_button.setFixedWidth(100)
+        left_button.setFixedSize(100,100)
+        # left_button.setFixedWidth(100)
         right_button = QPushButton("Next")
-        right_button.setFixedWidth(100)
+        right_button.setFixedSize(100,100)
+        # right_button.setFixedWidth(100)
         more_buttons.addWidget(left_button)
         more_buttons.addWidget(right_button)
+        more_buttons.addWidget(self.legend)
 
         more_window_layout.addWidget(self.more_title,0)
-        more_window_layout.setSpacing(5)
+        more_window_layout.setSpacing(10)
         more_window_layout.addLayout(self.focus_graphic)
-        more_window_layout.setSpacing(5)
-        more_window_layout.addWidget(self.legend, alignment=Qt.AlignmentFlag.AlignCenter)
+        more_window_layout.setSpacing(30)
+        # more_window_layout.addWidget(self.legend, alignment=Qt.AlignmentFlag.AlignCenter)
         more_window_layout.addLayout(more_buttons)
+
+        more_window_layout.addStretch(1)
         self.more_window.setLayout(more_window_layout)
 
         more_layout.addWidget(self.more_window)
