@@ -30,8 +30,8 @@ class ImageZoomManager(QGraphicsView):
         pixmap = QPixmap(image_path)
         self.scene.clear()
         self.image_item = self.scene.addPixmap(pixmap.scaled(
+            800,
             550,
-            500,
             Qt.AspectRatioMode.KeepAspectRatio
         ))
         self.setSceneRect(self.image_item.boundingRect())

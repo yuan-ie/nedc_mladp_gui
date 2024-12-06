@@ -20,23 +20,11 @@ class StatsBlockManager:
 
         stats_window = QGroupBox("Model Results")
         stats_window.setStyleSheet("background-color: lightblue;")
-        stats_window.setFixedHeight(150)
+        stats_window.setFixedHeight(300)
         stats_window.setAlignment(Qt.AlignmentFlag.AlignCenter)
         stats_window_layout =  QVBoxLayout()
 
         stats_block_layout = QHBoxLayout()
-
-        # stats1_layout = QVBoxLayout()
-        # text1 = QLabel("text1")
-        # text1.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        # stats1_layout.addWidget(text1,0)
-        # stats1_layout.addStretch(1)
-
-        # stats2_layout = QVBoxLayout()
-        # text2 = QLabel("text2")
-        # text2.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        # stats2_layout.addWidget(text2,0)
-        # stats2_layout.addStretch(1)
 
         rnf_layout = QVBoxLayout()
         rnf_label = QLabel("RNF")
@@ -83,5 +71,6 @@ class StatsBlockManager:
         self.rnf_stats.setText(self.print_numbers(tp,fp,tn,fn, conf_scores, overall_conf))
 
     def print_numbers(self, tp,fp,tn,fn, conf_scores, overall_conf):
-        text = "True Positives: " + str(tp) + "\nFalse Positives: " + str(fp) + "\nTrue Negatives: " + str(tn) + "\nFalse Negatives: " + str(fn)
-        return text
+        text1 = "True Positives: " + str(tp) + "\nFalse Positives: " + str(fp) + "\nTrue Negatives: " + str(tn) + "\nFalse Negatives: " + str(fn)
+
+        return text1

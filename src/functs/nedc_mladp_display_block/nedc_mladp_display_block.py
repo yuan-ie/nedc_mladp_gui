@@ -1,5 +1,5 @@
-from PyQt6.QtWidgets import QListWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QGroupBox, QGraphicsView, QGraphicsScene, QGraphicsPixmapItem
-from PyQt6.QtGui import QPixmap
+from PyQt6.QtWidgets import QListWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QGroupBox, QGridLayout
+from PyQt6.QtGui import QPixmap, QColor, QPalette
 from PyQt6.QtCore import Qt
 import os
 
@@ -7,7 +7,8 @@ from nedc_mladp_zoom_funct import ImageZoomManager
 
 imagepath = "/data/isip/exp/tuh_dpath/exp_0289/Machine-Learning-Applications-In-Digital-Pathology/nedc_mladp/data/yuan_test/original_files/"
 imagepath_OG = "/data/isip/exp/tuh_dpath/exp_0289/Machine-Learning-Applications-In-Digital-Pathology/nedc_mladp/data/yuan_test/original_ann_files/"
-imagepath_CNN = "/data/isip/exp/tuh_dpath/exp_0289/Machine-Learning-Applications-In-Digital-Pathology/nedc_mladp/data/yuan_test/cnn_files/"
+# imagepath_CNN = "/data/isip/exp/tuh_dpath/exp_0289/Machine-Learning-Applications-In-Digital-Pathology/nedc_mladp/data/yuan_test/cnn_files/"
+imagepath_CNN = "/data/isip/exp/tuh_dpath/exp_0289/Machine-Learning-Applications-In-Digital-Pathology/nedc_mladp/data/yuan_test/cnn_image_outputs/"
 imagepath_RNF = "/data/isip/exp/tuh_dpath/exp_0289/Machine-Learning-Applications-In-Digital-Pathology/nedc_mladp/data/yuan_test/rnf_files/"
 
 cnn_list_file = "/data/isip/exp/tuh_dpath/exp_0289/Machine-Learning-Applications-In-Digital-Pathology/nedc_mladp/data/yuan_test/all_files/cnn_files.list"
@@ -36,7 +37,7 @@ class DisplayBlockManager:
 
         # Create the scene
         self.image_zoom_manager = ImageZoomManager()
-        self.image_zoom_manager.setFixedSize(550, 400)
+        self.image_zoom_manager.setFixedSize(800, 550)
 
     def display_block(self):
         '''
@@ -74,7 +75,7 @@ class DisplayBlockManager:
         # Initialize the image block layout.
         self.image_window = QGroupBox("Image Window")
         self.image_window.setStyleSheet("background-color: lightblue;")
-        self.image_window.setFixedSize(400, 300)
+        self.image_window.setFixedSize(900, 450)
         self.image_window_layout = QVBoxLayout()
 
         # Default text for no image.
@@ -155,8 +156,9 @@ class DisplayBlockManager:
             else:
                 # self.image_label.setText("Image not found.")
                 # self.more_label.setText("Image not found.")
-                self.image_label.setText("New.")
-                self.more_label.setText("New.")
+                # self.image_label.setText("New.")
+                # self.more_label.setText("New.")
+                pass
         else:
             self.image_label.setText("No item selected. Please select an item first.")
 
@@ -174,7 +176,7 @@ class DisplayBlockManager:
 
         self.more_window = QGroupBox()
         self.more_window.setStyleSheet("background-color: lightblue;")
-        self.more_window.setFixedSize(600,500)
+        self.more_window.setFixedSize(900,800)
         self.more_window.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.more_title = QLabel()
@@ -184,8 +186,11 @@ class DisplayBlockManager:
         self.more_title.setStyleSheet("font-size: 16px;") # font-weight: bold;
 
         # Display image
-        self.more_label = QLabel()
-        self.more_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        # self.more_label = QLabel()
+        # self.more_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.legend = self.legend_chart()
+        self.legend.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.focus_graphic = QVBoxLayout()
         self.focus_graphic.addWidget(self.image_zoom_manager)
@@ -201,7 +206,10 @@ class DisplayBlockManager:
         more_buttons.addWidget(right_button)
 
         more_window_layout.addWidget(self.more_title,0)
+        more_window_layout.setSpacing(5)
         more_window_layout.addLayout(self.focus_graphic)
+        more_window_layout.setSpacing(5)
+        more_window_layout.addWidget(self.legend, alignment=Qt.AlignmentFlag.AlignCenter)
         more_window_layout.addLayout(more_buttons)
         self.more_window.setLayout(more_window_layout)
 
@@ -227,10 +235,12 @@ class DisplayBlockManager:
                 self.image_zoom_manager.update_image(image_path)
 
             else:
-                self.more_title.setText("No Image")
-                self.more_label.setText("Image not found.")
+                pass
+                # self.more_title.setText("No Image")
+                # self.more_label.setText("Image not found.")
         else:
-            self.more_label.setText("No item selected. Please select an item first.")
+            pass
+            # self.more_label.setText("No item selected. Please select an item first.")
 
     def dummy_list(self):
 
@@ -281,4 +291,58 @@ class DisplayBlockManager:
 
         return self.original_xml_file, self.cnn_pred_file, self.rnf_pred_file
     
-    
+    def legend_chart(self):
+        grid_box = QGroupBox()
+        grid_box.setStyleSheet("background-color: white;")
+        grid_box.setFixedWidth(400)
+        # grid_box.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        bckg_ref, bckg_hyp = "#ff9603", "#ffcb82"
+        norm_ref, norm_hyp = "#ffdd00", "#f7eb9e"
+        nneo_ref, nneo_hyp = "#ff003c", "#ffa6bb"
+        indc_ref, indc_hyp = "#47ff3d", "#b2f2ae"
+        dcis_ref, dcis_hyp = "#0877ff", "#a8cfff"
+        artf_ref, artf_hyp = "#ff0ff3", "#ffa1fa"
+        null_ref, null_hyp = "#9d14ff", "#d294ff"
+        infl_ref, infl_hyp = "#17f3ff", "#c4fcff"
+        susp_ref, susp_hyp = "#b8ff1f", "#e1faac"
+
+        colors = [
+            [bckg_ref, norm_ref, artf_ref, null_ref, susp_ref, infl_ref, nneo_ref, indc_ref, dcis_ref],
+            [bckg_hyp, norm_hyp, artf_hyp, null_hyp, susp_hyp, infl_hyp, nneo_hyp, indc_hyp, dcis_hyp]
+        ]
+
+        labels = ["bckg", "norm", "artf", "null", "susp", "infl", "nneo", "indc", "dcis"]
+        types = ["ref", "hyp"]
+        rows, cols = 3, 10
+
+        grid = QGridLayout()
+        grid.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        # grid.setSpacing(1)
+
+        for r in range(rows):
+            for c in range(cols):
+                if r == 0:
+                    if c != 0:
+                        box = QLabel()
+                        box.setFixedSize(30,20)
+                        box.setText(labels[c-1])
+                        grid.addWidget(box, r, c)
+                else:
+                    if c == 0:
+                        box = QLabel()
+                        box.setFixedSize(30,20)
+                        box.setText(types[r-1])
+                        grid.addWidget(box, r, c)
+                    else:
+                        box = QLabel()
+                        box.setFixedSize(30,20)
+                        pixmap = QPixmap(30,20)
+                        pixmap.fill(QColor(colors[r-1][c-1]))
+                        box.setPixmap(pixmap)
+                        grid.addWidget(box, r, c)
+        
+        grid_box.setLayout(grid)
+
+        return grid_box
