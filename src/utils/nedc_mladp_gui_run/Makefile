@@ -8,8 +8,9 @@ SRC = $(wildcard *.py)
 # define an installation target
 #
 install:
+	cd $(MLADP_GUI)/nedc_mladp_gui/bin/
 	cp -f $(SRC) $(MLADP_GUI)/nedc_mladp_gui/bin/$(SRC)
-	cd $(MLADP)/nedc_mladp/bin; chmod u+rwx,g+rwx,o+rw $(SRC)
+	cd $(MLADP_GUI)/nedc_mladp_gui/bin; chmod u+rwx,g+rwx,o+rwx $(SRC)
 
 #
 # end of file
